@@ -16,7 +16,7 @@ open Fable.SimpleHttp
 
 async {
     let! reponseText = Http.get "/api/data"
-    printfn "recieved data %s" responseText
+    printfn "received data %s" responseText
 }
 
 // Safe GET request (does not throw)
@@ -62,7 +62,7 @@ async {
     response.responseHeaders
     |> Map.tryFind "content-length"
     |> Option.map int 
-    |> Optioin.iter (printfn "Content length: %d") 
+    |> Option.iter (printfn "Content length: %d") 
 }
 
 
