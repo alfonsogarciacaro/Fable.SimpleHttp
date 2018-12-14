@@ -4,6 +4,53 @@ open Browser
 open Browser.Types
 open Fable.Core
 
+type HttpMethod =
+    | GET
+    | POST
+    | PUT
+    | PATCH
+    | DELELE
+    | HEAD
+    | OPTIONS
+
+type Header = Header of string * string
+
+[<RequireQualifiedAccess>]
+type BodyContent =
+    | Empty
+    | Text of string
+    | Binary of Browser.Types.Blob
+    | Form of Browser.Types.FormData
+
+[<RequireQualifiedAccess>]
+type ResponseTypes =
+    | Text
+    | Blob
+    | ArrayBuffer
+
+type HttpRequest = {
+    url: string
+    method: HttpMethod
+    headers: Header list
+    overridenMimeType: Option<string>
+    overridenResponseType: Option<ResponseTypes>
+    content: BodyContent
+}
+
+[<RequireQualifiedAccess>]
+type ResponseContent =
+    | Text of string
+    | Blob of Browser.Types.Blob
+    | ArrayBuffer of JS.ArrayBuffer
+    | Unknown of obj
+
+type HttpResponse = {
+    statusCode: int
+    responseText: string
+    responseType: string
+    responseHeaders: Map<string, string>
+    content : ResponseContent
+}
 
 module Blob =
     /// Creates a Blob from the given input string
@@ -201,7 +248,7 @@ module Http =
             let xhr = XMLHttpRequest.Create()
             xhr.``open``("GET", url)
             xhr.onreadystatechange <- fun _ ->
-                if xhr.readyState = ReadyState.Done 
+                if xhr.readyState = ReadyState.Done
                 then resolve (int xhr.status, xhr.responseText)
             xhr.send(None)
 
@@ -211,7 +258,7 @@ module Http =
             let xhr = XMLHttpRequest.Create()
             xhr.``open``("PUT", url)
             xhr.onreadystatechange <- fun _ ->
-                if xhr.readyState = ReadyState.Done 
+                if xhr.readyState = ReadyState.Done
                 then resolve (int xhr.status, xhr.responseText)
             xhr.send(None)
 
@@ -221,7 +268,7 @@ module Http =
             let xhr = XMLHttpRequest.Create()
             xhr.``open``("DELETE", url)
             xhr.onreadystatechange <- fun _ ->
-                if xhr.readyState = ReadyState.Done 
+                if xhr.readyState = ReadyState.Done
                 then resolve (int xhr.status, xhr.responseText)
             xhr.send(None)
 
